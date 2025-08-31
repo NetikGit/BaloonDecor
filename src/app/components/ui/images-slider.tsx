@@ -14,7 +14,7 @@ export const ImagesSlider = ({
 }: {
   images: string[];
   children: React.ReactNode;
-  overlay?: React.ReactNode;
+  overlay?: boolean; // ✅ corrected type (not ReactNode)
   overlayClassName?: string;
   className?: string;
   autoplay?: boolean;
@@ -36,42 +36,42 @@ export const ImagesSlider = ({
     );
   };
 
-  useEffect(() => {
-    loadImages();
-  }, []);
-
   const loadImages = () => {
     setLoading(true);
-    const loadPromises = images.map((image) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = image;
-        img.onload = () => resolve(image);
-        img.onerror = reject;
-      });
-    });
+    const loadPromises = images.map(
+      (image) =>
+        new Promise<string>((resolve, reject) => {
+          const img = new Image();
+          img.src = image;
+          img.onload = () => resolve(image);
+          img.onerror = reject;
+        })
+    );
 
     Promise.all(loadPromises)
-      .then((loadedImages) => {
-        setLoadedImages(loadedImages as string[]);
+      .then((loaded) => {
+        setLoadedImages(loaded);
         setLoading(false);
       })
       .catch((error) => console.error("Failed to load images", error));
   };
 
   useEffect(() => {
+    loadImages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images]); // ✅ dependency included
+  
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") {
-        handleNext();
-      } else if (event.key === "ArrowLeft") {
-        handlePrevious();
-      }
+      if (event.key === "ArrowRight") handleNext();
+      else if (event.key === "ArrowLeft") handlePrevious();
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     // autoplay
-    let interval: any;
+    let interval: ReturnType<typeof setInterval> | undefined;
     if (autoplay) {
       interval = setInterval(() => {
         handleNext();
@@ -80,9 +80,9 @@ export const ImagesSlider = ({
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      clearInterval(interval);
+      if (interval) clearInterval(interval);
     };
-  }, [autoplay]);
+  }, [autoplay, handleNext, handlePrevious]); // ✅ proper deps
 
   // ✅ Properly typed Variants
   const slideVariants: Variants = {
@@ -97,26 +97,22 @@ export const ImagesSlider = ({
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: easeInOut, // ✅ FIXED
+        ease: easeInOut,
       },
     },
     upExit: {
       opacity: 1,
       y: "-150%",
-      transition: {
-        duration: 1,
-      },
+      transition: { duration: 1 },
     },
     downExit: {
       opacity: 1,
       y: "150%",
-      transition: {
-        duration: 1,
-      },
+      transition: { duration: 1 },
     },
   };
 
-  const areImagesLoaded = loadedImages.length > 0;
+  const areImagesLoaded = loadedImages.length > 0 && !loading;
 
   return (
     <div
@@ -124,9 +120,7 @@ export const ImagesSlider = ({
         "overflow-hidden h-full w-full relative flex items-center justify-center",
         className
       )}
-      style={{
-        perspective: "1000px",
-      }}
+      style={{ perspective: "1000px" }}
     >
       {areImagesLoaded && children}
       {areImagesLoaded && overlay && (
@@ -136,7 +130,7 @@ export const ImagesSlider = ({
       )}
 
       {areImagesLoaded && (
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           <motion.img
             key={currentIndex}
             src={loadedImages[currentIndex]}
