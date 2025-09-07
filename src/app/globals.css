@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 @import "tailwindcss";
+
 
 :root {
   --background: #ffffff;
@@ -39,6 +41,11 @@ body {
 
 @keyframes scroll {
   to {
-    transform: translate(calc(-50% - 0.5rem));
+    transform: translateX(-50%);
   }
+}
+
+.animate-scroll {
+  animation: scroll var(--animation-duration, 40s) linear infinite;
+  animation-direction: var(--animation-direction, forwards);
 }

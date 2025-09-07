@@ -35,19 +35,24 @@ return (
 
 <Header />
 <Hero />
-<Script src='https://www.noupe.com/embed/01990ac361597a51bf762a0e1818a8913824.js' strategy="afterInteractive" />
+   <Script
+        src='https://www.noupe.com/embed/01990ac361597a51bf762a0e1818a8913824.js'
+        strategy="afterInteractive"
+      />
 
-      {/* Initialize Chatbot */}
-      <Script id="chatbot-init" strategy="afterInteractive">
+      {/* Initialize AFTER the script loads */}
+      <Script id="botpress-init" strategy="afterInteractive">
         {`
-          window.botpressWebChat.init({
-            host: "https://cdn.botpress.cloud/webchat/v1",
-            botId: "your-bot-id-here",
-            botName: "Health Assistant",
-            welcomeMessage: "Hello! I can help you with vaccination schedules, symptoms, and health alerts.",
-            hideWidget: false,
-            showCloseButton: true,
-            theme: "classic"
+          window.addEventListener("load", function () {
+            if (window.botpressWebChat) {
+              window.botpressWebChat.init({
+                host: "https://cdn.botpress.cloud/webchat/v1",
+                botId: "your-bot-id",
+                // any other options...
+              });
+            } else {
+              console.error("Botpress WebChat script not loaded");
+            }
           });
         `}
       </Script>
@@ -64,4 +69,4 @@ return (
 </>
 );
 }
-
+//'https://www.noupe.com/embed/01990ac361597a51bf762a0e1818a8913824.js'

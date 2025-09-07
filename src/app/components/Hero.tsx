@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { waLink } from "@/lib/utils";
+import BalloonsBackground from "./BaloonsBackground";
 
 // Simple image slider component
 const images = [
@@ -39,11 +40,11 @@ function BackgroundSlider() {
 export default function Hero() {
   return (
     <section className="relative py-40 text-center flex flex-col items-center justify-between min-h-[400px] px-4 overflow-hidden">
-      <BackgroundSlider />
-      <h1 className="pt-4 text-4xl md:text-6xl shadow-lg max-w-4xl font-bold text-pink-600 outlined-text">
+       <BackgroundSlider /> 
+      <h1 className="pt-4 text-4xl md:text-6xl  max-w-4xl font-bold text-pink-600 outlined-text">
         Transform Your Events with BalloonDecor
       </h1>
-      <p className="mt-8 text-xl font-bold max-w-4xl text-neutral-200">
+      <p className="mt-8 text-xl text-mono font-semibold max-w-4xl text-neutral-200">
         Make every celebration unforgettable with our beautifully crafted balloon decorations. From birthdays to weddings and corporate events, we bring creativity, elegance, and joy to your special moments!
       </p>
       <a

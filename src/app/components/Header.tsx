@@ -7,10 +7,10 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full sticky top-0 bg-white shadow z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
+    <header className="w-full sticky top-0 bg-white shadow z-50 ">
+      <div className="max-w-6xl mx-auto font-mono font-extralight text-lg flex justify-between items-center p-4">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-pink-600">
+        <Link href="/" className="text-xl font-mono font-bold text-pink-600">
           BalloonDecor
         </Link>
 
